@@ -1,3 +1,17 @@
+const MAX_SCORE = 5;
+
+const rockButton = document.querySelector("#rock");
+const paperButton = document.querySelector("#paper");
+const scissorsButton = document.querySelector("#scissors");
+const results = document.querySelector("#results");
+const selectPlayerScore = document.querySelector("#playerScore");
+const selectComputerScore = document.querySelector("#computerScore");
+const bodySelector = document.querySelector("body");
+const restartButton = document.createElement("button");
+
+selectPlayerScore.textContent = 0;
+selectComputerScore.textContent = 0;
+
 function chooseRandomly() {
   return Math.floor(Math.random() * 100);
 }
@@ -17,53 +31,69 @@ function playRound(playerSelection, computerSelection) {
   playerSelection = playerSelection.toLowerCase().trim();
   console.log(playerSelection, computerSelection);
   if (playerSelection == computerSelection) {
-    alert("Tie! Both selections are equal!");
+    results.textContent = "Tie! Both selections are equal!";
     return "Tie! Both selections are equal!";
   } else if (playerSelection == "rock" && computerSelection == "scissors") {
-    alert("You Lose! Rock beats Scissors");
+    results.textContent = "You Lose! Rock beats Scissors";
     return "You Win! Rock beats Scissors";
   } else if (playerSelection == "rock" && computerSelection == "paper") {
-    alert("You Lose! Paper beats Rock");
+    results.textContent = "You Lose! Paper beats Rock";
     return "You Lose! Paper beats Rock";
   } else if (playerSelection == "scissors" && computerSelection == "paper") {
-    alert("You Win! Scissors beats Paper");
+    results.textContent = "You Win! Scissors beats Paper";
     return "You Win! Scissors beats Paper";
   } else if (playerSelection == "scissors" && computerSelection == "rock") {
-    alert("You Lose! Rock beats Scissors");
+    results.textContent = "You Lose! Rock beats Scissors";
     return "You Lose! Rock beats Scissors";
   } else if (playerSelection == "paper" && computerSelection == "rock") {
-    alert("You Win! Paper beats Rock");
+    results.textContent = "You Win! Paper beats Rock";
     return "You Win! Paper beats Rock";
   } else if (playerSelection == "paper" && computerSelection == "scissors") {
-    alert("You Lose! Scissors beats Paper");
+    results.textContent = "You Lose! Scissors beats Paper";
     return "You Lose! Scissors beats Paper";
   } else {
-    alert("You Lose! Invalid Selection Made!");
+    results.textContent = "You Lose! Invalid Selection Made!";
     return "Invalid Selection Made!";
   }
 }
 
-function playGame() {
-  let playerScore = 0;
-  let computerScore = 0;
+function playGame(userSelection) {
+  let playerScore = selectPlayerScore.textContent;
+  let computerScore = selectComputerScore.textContent;
 
-  for (let i = 0; i < 5; i++) {
-    let playerSelection = prompt(
-      "Enter Rock, Paper, or Scissors... Any other case will be disqualified"
-    );
-    let results = playRound(playerSelection, getComputerChoice());
-    if (results.includes("Win")) {
-      playerScore++;
-    } else {
-      computerScore++;
-    }
+  let playerSelection = userSelection;
+  let gameOutcome = playRound(playerSelection, getComputerChoice());
+  if (gameOutcome.includes("Win")) {
+    playerScore++;
+    selectPlayerScore.textContent = playerScore;
+  } else if (gameOutcome.includes("Lose")){
+    computerScore++;
+    selectComputerScore.textContent = computerScore;
   }
 
-  if (computerScore > playerScore) {
-    alert("Computer Wins, Better Luck Next Time!!!");
-  } else {
-    alert("Hey You're Pretty Good At This!!!");
+  if (computerScore >= MAX_SCORE || playerScore >= MAX_SCORE) {
+    if (computerScore > playerScore) {
+      alert("Computer Wins, Better Luck Next Time!!!");
+    } else {
+      alert("Hey You're Pretty Good At This!!!");
+    }
+    restartButton.textContent = "Restart Game";
+    bodySelector.append(restartButton);
   }
 }
 
-playGame();
+rockButton.addEventListener("click", () => {
+  playGame("rock");
+});
+
+scissorsButton.addEventListener("click", () => {
+  playGame("scissors");
+});
+
+paperButton.addEventListener("click", () => {
+  playGame("paper");
+});
+restartButton.addEventListener("click", () => {
+  location.reload();
+});
+
